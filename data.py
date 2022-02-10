@@ -11,6 +11,8 @@ except IndexError:
 
 
 def checker(depends):
+    with open("inventory.txt", "r") as f:
+        inv_lines = f.readlines()
     for item in depends:
         if isinstance(item, types.FunctionType):
             try:
@@ -18,7 +20,7 @@ def checker(depends):
                     return False, item()[1]
             except RecursionError:
                 return False, f"There's a circular dependency for {item}'"
-        elif item not in modules and type(item) == str:
+        elif item+'\n' not in inv_lines and type(item) == str:
             return False, item
     return [True]
 

@@ -11,6 +11,8 @@ def check_dependency(my_list, list_name):
         return False
 
 
+inv_lines = []
+
 running = True
 adding = True
 crafting = False
@@ -33,7 +35,17 @@ while running:
                 print('Choose a fucking number.')
                 continue
             if not arch_choice == len(all_items) + 1:
-                modules.append(all_items[arch_choice-1])
+                with open("inventory.txt", "r") as f:
+                    inv_lines = f.readlines()
+                if f'{all_items[arch_choice-1]}\n' not in inv_lines:
+                    with open("inventory.txt", "a") as f:
+                        f.write(all_items[arch_choice-1])
+                        f.write('\n')
+                else:
+                    with open("inventory.txt", "w") as f:
+                        for line in inv_lines:
+                            if line.strip("\n") != all_items[arch_choice-1]:
+                                f.write(line)
             else:
                 adding = False
                 crafting = True
@@ -50,7 +62,7 @@ while running:
                     print_count += 1
                 print()
                 print(f'{print_count}. Go to adding / removal')
-                arch_choice = int(input('Please a craft to test:'))
+                arch_choice = int(input('Please choose a craft to test:'))
                 os.system('cls')
             except ValueError:
                 print('Choose a fucking number.')
